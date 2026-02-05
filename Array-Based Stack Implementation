@@ -1,0 +1,108 @@
+// This program implements a Stack data structure using a dynamic array. Unlike the previous linked-list version, this approach uses a contiguous block of memory and a top index to track the number of elements. The provided logic also includes a specific application in main for converting stack elements into numerical values for arithmetic operations.
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int* initializare(int *v, int *top, int max) {
+    if (v == NULL) {
+        v = new int[max];
+        *top = 0;
+        // Empty stack, allocated
+    } else {
+        if (*top == max) {
+            // Stack full
+            return v;
+        } else {
+            *top = 0;
+        }
+    }
+    return v;
+}
+
+int PUSH(int *v, int X, int *top, int max) {
+    if (v == NULL) {
+        // NULL
+        return 0;
+    } else {
+        if ((*top) == max) {
+            // Stiva plina | Stack full
+            return 0;
+        } else {
+            // Shift elements to make room at the top (index 0)
+            for (int i = *top; i > 0; i--)
+                v[i] = v[i - 1];
+            v[0] = X;
+            (*top)++;
+        }
+    }
+    return 1;
+}
+
+int POP(int * v, int *top) {
+    if (v == NULL) {
+        // NULL
+        return 0;
+    } else {
+        if (*top == 0) {
+            return 2;
+        } else {
+            // Shift elements to remove the top (index 0)
+            for (int i = 0; i < *top - 1; i++)
+                v[i] = v[i + 1];
+            (*top)--;
+        }
+    }
+    return 1;
+}
+
+void afisare(int * v, int *top) {
+    if (v == NULL) {
+        // NULL
+    } else {
+        for (int i = 0; i < *top; i++) {
+            cout << v[i] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    /* Variabile:
+        v = vector.
+        max = maximum number of elements.
+        top = number of elements in vector.
+        X = newly inserted element.
+    */
+    int max1 = 5, max2 = 5;
+    int top1 = 0, top2 = 0;
+    int *v1 = NULL;
+    int *v2 = NULL;
+
+    v1 = initializare(v1, &top1, max1);
+    v2 = initializare(v2, &top2, max2);
+
+    int i, p = 10, s1 = 0, s2 = 0, s3;
+    int copie1 = max1 - 1, copie2 = max2 - 1;
+
+    for (i = 0; i < max1; i++) {
+        cin >> v1[i];
+        top1++;
+        s1 = s1 + v1[i] * pow(p, copie1);
+        copie1--;
+    }
+
+    for (i = 0; i < max2; i++) {
+        cin >> v2[i];
+        top2++;
+        s2 = s2 + v2[i] * pow(p, copie2);
+        copie2--;
+    }
+
+    s3 = s1 + s2;
+    cout << s3 << endl;
+
+    delete[] v1;
+    delete[] v2;
+    return 0;
+}
