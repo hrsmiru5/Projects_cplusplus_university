@@ -1,0 +1,126 @@
+// This program implements a Binary Search Tree (BST), or Arbore Binar de Căutare (ABC). It manages nodes containing a key and additional information, ensuring that for any node, the left subtree contains smaller keys and the right subtree contains larger keys. The implementation includes node insertion, searching, deletion (handling leaf nodes, nodes with one child, and nodes with two children), and three types of depth-first traversals: Preorder (RSD), Inorder (SRD), and Postorder (SDR).
+
+#include<iostream>
+using namespace std;
+struct Nod{
+    struct Nod*st;
+    int cheia;
+    float alte_info;
+    struct Nod*dr;
+};
+Nod*initializareABC(Nod*ROOT){
+    return NULL;
+}
+Nod*cautare(Nod*ROOT,int cheia_caut){
+    Nod*tmp=ROOT;
+    while(tmp!=NULL){
+        if(cheia_caut<tmp->cheia)tmp=tmp->st;
+        else if(cheia_caut>tmp->cheia)tmp=tmp->dr;
+        else return tmp;
+    }
+    return NULL;
+}
+Nod*inserare(Nod*ROOT,int cheia_nou,int alte_info_nou){
+    if(ROOT==NULL){
+        Nod*Nou=new Nod;
+        Nou->st=Nou->dr=NULL;
+        Nou->cheia=cheia_nou;
+        Nou->alte_info=alte_info_nou;
+        return Nou;
+    }
+    Nod*tmp=ROOT;
+    Nod*tata=NULL;
+    while(tmp!=NULL){
+        tata=tmp;
+        if(cheia_nou<tmp->cheia)tmp=tmp->st;
+        else if(cheia_nou>tmp->cheia)tmp=tmp->dr;
+        else{
+            cout<<"EROARE-Cheie_dubla"<<endl;
+            return ROOT;
+        }
+    }
+    Nod*Nou=new Nod;
+    Nou->st=Nou->dr=NULL;
+    Nou->cheia=cheia_nou;
+    Nou->alte_info=alte_info_nou;
+    if(cheia_nou<tata->cheia)tata->st=Nou;
+    else tata->dr=Nou;
+    return ROOT;
+}
+Nod*stergere_ABC(Nod*ROOT,int cheia_sterg){
+    if(ROOT==NULL)return NULL;
+    if(cheia_sterg<ROOT->cheia)ROOT->st=stergere_ABC(ROOT->st,cheia_sterg);
+    else if(cheia_sterg>ROOT->cheia)ROOT->dr=stergere_ABC(ROOT->dr,cheia_sterg);
+    else{
+        if(ROOT->st==NULL){
+            Nod*temp=ROOT->dr;
+            delete ROOT;
+            return temp;
+        }else if(ROOT->dr==NULL){
+            Nod*temp=ROOT->st;
+            delete ROOT;
+            return temp;
+        }
+        Nod*temp=ROOT->st;
+        while(temp->dr!=NULL)temp=temp->dr;
+        ROOT->cheia=temp->cheia;
+        ROOT->alte_info=temp->alte_info;
+        ROOT->st=stergere_ABC(ROOT->st,temp->cheia);
+    }
+    return ROOT;
+}
+void preordine_RSD(Nod*tmp){
+    if(tmp!=NULL){
+        cout<<tmp->cheia<<" ";
+        preordine_RSD(tmp->st);
+        preordine_RSD(tmp->dr);
+    }
+}
+void inordine_SRD(Nod*tmp){
+    if(tmp!=NULL){
+        inordine_SRD(tmp->st);
+        cout<<tmp->cheia<<" ";
+        inordine_SRD(tmp->dr);
+    }
+}
+void postordine_SDR(Nod*tmp){
+    if(tmp!=NULL){
+        postordine_SDR(tmp->st);
+        postordine_SDR(tmp->dr);
+        cout<<tmp->cheia<<" ";
+    }
+}
+int inaltime(Nod*ROOT){
+    if(ROOT==NULL)return 0;
+    int hst=inaltime(ROOT->st);
+    int hdr=inaltime(ROOT->dr);
+    return 1+(hst>hdr?hst:hdr);
+}
+int main(){
+    Nod*ROOT=NULL;
+    int meniu,n,m;
+    do{
+        cout<<"\n0.Iesire\n1.Inserare\n2.Stergere\n3.RSD\n4.SRD\n5.SDR\n6.Toate\n7.Inaltime\nAlegeti: ";
+        cin>>meniu;
+        switch(meniu){
+            case 1:
+                cout<<"Nr elemente: ";cin>>m;
+                while(m--){cin>>n;ROOT=inserare(ROOT,n,n);}
+                break;
+            case 2:
+                cout<<"Cheie de sters: ";cin>>n;
+                ROOT=stergere_ABC(ROOT,n);
+                break;
+            case 3:preordine_RSD(ROOT);cout<<endl;break;
+            case 4:inordine_SRD(ROOT);cout<<endl;break;
+            case 5:postordine_SDR(ROOT);cout<<endl;break;
+            case 6:
+                cout<<"RSD: ";preordine_RSD(ROOT);cout<<endl;
+                cout<<"SRD: ";inordine_SRD(ROOT);cout<<endl;
+                cout<<"SDR: ";postordine_SDR(ROOT);cout<<endl;
+                break;
+            case 7:cout<<"Inaltime: "<<inaltime(ROOT)<<endl;break;
+        }
+    }while(meniu!=0);
+    return 0;
+}
