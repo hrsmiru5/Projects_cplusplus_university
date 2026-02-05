@@ -1,0 +1,73 @@
+// This program implements a Stack using a dynamic array. Unlike a standard stack where elements are added at the end, this version performs a PUSH by shifting all existing elements to the right and inserting the new value at index 0. Similarly, POP removes the element at index 0 and shifts the remaining elements to the left.
+
+#include<iostream>
+using namespace std;
+int*initializare(int*v,int*top,int max){
+    if(v==NULL){
+        v=new int[max];
+        *top=0;
+        // Stiva goala, a fost alocata | Empty stack, allocated
+    }else{
+        if(*top==max){
+            // Stiva plina | Stack full
+            return v;
+        }else{
+            *top=0;
+        }
+    }
+    return v;
+}
+int PUSH(int*v,int X,int*top,int max){
+    if(v==NULL){
+        return 0;
+    }else{
+        if((*top)==max){
+            return 0;
+        }else{
+            for(int i=*top;i>0;i--)
+                v[i]=v[i-1];
+            v[0]=X;
+            (*top)++;
+        }
+    }
+    return 1;
+}
+int POP(int*v,int*top){
+    if(v==NULL){
+        return 0;
+    }else{
+        if(*top==0){
+            return 2;
+        }else{
+            for(int i=0;i<(*top)-1;i++)
+                v[i]=v[i+1];
+            (*top)--;
+        }
+    }
+    return 1;
+}
+void afisare(int*v,int*top){
+    if(v==NULL){
+        cout<<"NULL"<<endl;
+    }else{
+        for(int i=0;i<*top;i++){
+            cout<<v[i]<<" ";
+        }
+        cout<<endl;
+    }
+}
+int main(){
+    /* Variables:
+    v=array, max=capacity, top=size, X=new element
+    */
+    int max=10,top=0;
+    int*v=NULL;
+    v=initializare(v,&top,max);
+    PUSH(v,10,&top,max);
+    PUSH(v,20,&top,max);
+    afisare(v,&top);
+    POP(v,&top);
+    afisare(v,&top);
+    delete[]v;
+    return 0;
+}
