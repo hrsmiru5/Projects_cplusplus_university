@@ -1,0 +1,222 @@
+// This program implements a Doubly Linked List (DLL), a data structure consisting of nodes with two pointers: one to the next node (succ) and one to the previous node (pred). It includes head and tail management through a dedicated LDI structure, allowing for efficient bi-directional traversal, insertion, deletion, and sorting.
+
+#include <iostream>
+using namespace std;
+
+// Define NODE Structure, for DLL we will have two links, the next element and the previous one.
+struct Nod {
+    int info;
+    struct Nod * succ; //successor
+    struct Nod * pred; //predecessor
+};
+
+// Define Structure For List. We define another structure because a doubly linked list has 2 nodes, front and end.
+struct LDI {
+    struct Nod* front;
+    struct Nod* end;
+};
+
+// We initialize the list structure, which contains 2 nodes, start and end.
+// In DLL we always keep the address of the first and last element
+LDI* initializareLista() {
+    LDI* lista = new LDI;
+    lista->front = NULL;
+    lista->end = NULL;
+    return lista;
+}
+
+// Initialization for a single node.
+Nod* init(const int info) {
+    // Dynamic Allocation for a new NODE.
+    Nod* nodNou = new Nod;
+    // Set information in the new NODE.
+    nodNou->info = info;
+    // Set the next and previous node (NULL, at creation we don't have a next NODE) so we set it to NULL.
+    nodNou->succ = NULL;
+    nodNou->pred = NULL;
+    // The function returns the new NODE.
+    return nodNou;
+}
+
+Nod* cautare(LDI* lista, const int element) {
+    Nod *tmp = lista->front;
+    while (tmp != NULL) {
+        if (tmp->info == element) return tmp;
+        tmp = tmp->succ;
+    }
+    return NULL;
+}
+
+LDI* inserareInceput(LDI* lista, const int info) {
+    Nod* nodNou = init(info);
+    if (lista->front == NULL) {
+        lista->front = lista->end = nodNou;
+    } else {
+        nodNou->succ = lista->front;
+        lista->front->pred = nodNou;
+        lista->front = nodNou;
+    }
+    return lista;
+}
+
+LDI* inserareSfarsit(LDI* lista, const int info) {
+    Nod* nodNou = init(info);
+    if (lista->front == NULL) {
+        lista->front = lista->end = nodNou;
+    } else {
+        lista->end->succ = nodNou;
+        nodNou->pred = lista->end;
+        lista->end = nodNou;
+    }
+    return lista;
+}
+
+LDI* inserareDupa(LDI* lista, const int info, const int element) {
+    Nod* tmp = cautare(lista, element);
+    if (tmp == NULL) return lista;
+    if (tmp == lista->end) return inserareSfarsit(lista, info);
+    Nod* nodNou = init(info);
+    nodNou->succ = tmp->succ;
+    nodNou->pred = tmp;
+    tmp->succ->pred = nodNou;
+    tmp->succ = nodNou;
+    return lista;
+}
+
+LDI* inserareInainte(LDI* lista, const int info, const int element) {
+    Nod* tmp = cautare(lista, element);
+    if (tmp == NULL) return lista;
+    if (tmp == lista->front) return inserareInceput(lista, info);
+    Nod* nodNou = init(info);
+    nodNou->pred = tmp->pred;
+    nodNou->succ = tmp;
+    tmp->pred->succ = nodNou;
+    tmp->pred = nodNou;
+    return lista;
+}
+
+LDI* stergereInceput(LDI* lista) {
+    if (lista->front == NULL) {
+        cout << "Lista este goala!";
+        return lista;
+    }
+    Nod* temp = lista->front;
+    if (lista->front == lista->end) {
+        lista->front = lista->end = NULL;
+    } else {
+        lista->front = lista->front->succ;
+        lista->front->pred = NULL;
+    }
+    delete temp;
+    return lista;
+}
+
+LDI* stergereSfarsit(LDI* lista) {
+    if (lista->end == NULL) {
+        cout << "Lista este goala!";
+        return lista;
+    }
+    Nod* temp = lista->end;
+    if (lista->front == lista->end) {
+        lista->front = lista->end = NULL;
+    } else {
+        lista->end = lista->end->pred;
+        lista->end->succ = NULL;
+    }
+    delete temp;
+    return lista;
+}
+
+LDI* stergereMijloc(LDI* lista, const int element) {
+    Nod* tmp = cautare(lista, element);
+    if (tmp == NULL) return lista;
+    if (tmp == lista->front) return stergereInceput(lista);
+    if (tmp == lista->end) return stergereSfarsit(lista);
+    tmp->pred->succ = tmp->succ;
+    tmp->succ->pred = tmp->pred;
+    delete tmp;
+    return lista;
+}
+
+LDI* actualizare(LDI* lista, const int element, int element_new) {
+    Nod *tmp = cautare(lista, element);
+    if (tmp != NULL) tmp->info = element_new;
+    else cout << "Element negasit";
+    return lista;
+}
+
+// From left to right (start -> end)
+void parcurgereStanga(LDI* lista) {
+    if (lista->front == NULL) {
+        cout << "Lista e goala";
+        return;
+    }
+    Nod* temp = lista->front;
+    while (temp != NULL) {
+        cout << temp->info << " ";
+        temp = temp->succ;
+    }
+}
+
+// From right to left (end -> start)
+void parcurgereDreapta(LDI* lista) {
+    if (lista->end == NULL) {
+        cout << "Lista e goala";
+        return;
+    }
+    Nod* temp = lista->end;
+    while (temp != NULL) {
+        cout << temp->info << " ";
+        temp = temp->pred;
+    }
+}
+
+LDI* sortare_crescator(LDI* lista) {
+    if (lista->front == NULL) return lista;
+    for (Nod *i = lista->front; i->succ != NULL; i = i->succ) {
+        for (Nod *j = i->succ; j != NULL; j = j->succ) {
+            if (i->info > j->info) {
+                int val = i->info;
+                i->info = j->info;
+                j->info = val;
+            }
+        }
+    }
+    return lista;
+}
+
+LDI* sortare_descrescator(LDI* lista) {
+    if (lista->front == NULL) return lista;
+    for (Nod *i = lista->front; i->succ != NULL; i = i->succ) {
+        for (Nod *j = i->succ; j != NULL; j = j->succ) {
+            if (i->info < j->info) {
+                int val = i->info;
+                i->info = j->info;
+                j->info = val;
+            }
+        }
+    }
+    return lista;
+}
+
+int main() {
+    LDI* lista = initializareLista();
+    int meniu, n, m;
+    do {
+        cout << "\n0. Iesire\n1. Inserare Inceput\n2. Inserare Sfarsit\n3. Stergere Inceput\n4. Stergere Sfarsit\n5. Inserare Inainte\n6. Inserare Dupa\n7. Sortare crescatoare\n8. Sortare descrescatoare\n9. Parcurgere Stanga\n10. Parcurgere Dreapta\nAlegeti: ";
+        cin >> meniu;
+        switch (meniu) {
+            case 1: cin >> n; lista = inserareInceput(lista, n); break;
+            case 2: cin >> n; lista = inserareSfarsit(lista, n); break;
+            case 3: lista = stergereInceput(lista); break;
+            case 4: lista = stergereSfarsit(lista); break;
+            case 5: cin >> n >> m; lista = inserareInainte(lista, n, m); break;
+            case 6: cin >> n >> m; lista = inserareDupa(lista, n, m); break;
+            case 7: lista = sortare_crescator(lista); break;
+            case 8: lista = sortare_descrescator(lista); break;
+            case 9: parcurgereStanga(lista); break;
+            case 10: parcurgereDreapta(lista); break;
+        }
+    } while (meniu != 0);
+    return 0;
+}
