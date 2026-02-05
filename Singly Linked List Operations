@@ -3,235 +3,240 @@
 #include<iostream>
 using namespace std;
 
-struct Nod {
+struct Nod{
     int info;
-    struct Nod * succ;
+    struct Nod*succ;
 };
 
-// !!! Every function, except the initialization one, must start with a condition:
-//     If FRONT is NULL it means the list does not exist!, otherwise, operations are performed on the list.
-Nod* init(const int info) {
+Nod*init(const int info){
     // Dynamic Allocation for a new NODE.
-    Nod* nodNou = new Nod;
+    Nod*nodNou=new Nod;
     // Set information in the new NODE.
-    nodNou->info = info;
+    nodNou->info=info;
     // Set the next node (NULL, at creation we don't have a next NODE) so we set it to NULL.
-    nodNou->succ = NULL;
+    nodNou->succ=NULL;
     // The function returns the new NODE.
     return nodNou;
 }
 
-Nod* inserareInceput(Nod* front, const int info) {
-    if (front == NULL) {
+Nod*inserareInceput(Nod*front,const int info){
+    if(front==NULL){
         // If the list is empty, we create a new node. This becomes the first element in the list (front).
-        front = init(info);
-    } else {
+        front=init(info);
+    }else{
         // The list was not empty. We create a new node.
-        Nod* NodNou = init(info);
+        Nod*NodNou=init(info);
         // Link the new node to the old first node.
-        NodNou->succ = front;
+        NodNou->succ=front;
         // The new first node becomes the new node created above.
-        front = NodNou;
+        front=NodNou;
     }
     // return the new first node from the list.
     return front;
 }
 
-Nod* inserareSfarsit(Nod* front, const int info) {
-    if (front == NULL) return init(info);
-    Nod *tmp = front;
-    while (tmp->succ != NULL) tmp = tmp->succ;
-    tmp->succ = init(info);
+Nod*inserareSfarsit(Nod*front,const int info){
+    if(front==NULL)return init(info);
+    Nod*tmp=front;
+    while(tmp->succ!=NULL)tmp=tmp->succ;
+    tmp->succ=init(info);
     return front;
 }
 
-Nod* inserareDupa(Nod* front, const int info, const int element) {
-    if (front == NULL) cout << "Lista goala";
-    else {
-        Nod *tmp = front;
-        while (tmp != NULL && tmp->info != element) tmp = tmp->succ;
-        if (tmp != NULL) {
-            Nod *NOU = init(info);
-            NOU->succ = tmp->succ;
-            tmp->succ = NOU;
+Nod*inserareDupa(Nod*front,const int info,const int element){
+    if(front==NULL){
+        cout<<"Lista goala";
+    }else{
+        Nod*tmp=front;
+        while(tmp!=NULL&&tmp->info!=element)tmp=tmp->succ;
+        if(tmp!=NULL){
+            Nod*NOU=init(info);
+            NOU->succ=tmp->succ;
+            tmp->succ=NOU;
         }
     }
     return front;
 }
 
-Nod* inserareInainte(Nod* front, const int info, const int element) {
-    if (front == NULL) { cout << "Lista goala"; return NULL; }
-    if (front->info == element) return inserareInceput(front, info);
-    Nod *tmp = front;
-    while (tmp->succ != NULL && tmp->succ->info != element) tmp = tmp->succ;
-    if (tmp->succ != NULL) {
-        Nod *NOU = init(info);
-        NOU->succ = tmp->succ;
-        tmp->succ = NOU;
+Nod*inserareInainte(Nod*front,const int info,const int element){
+    if(front==NULL){cout<<"Lista goala";return NULL;}
+    if(front->info==element)return inserareInceput(front,info);
+    Nod*tmp=front;
+    while(tmp->succ!=NULL&&tmp->succ->info!=element)tmp=tmp->succ;
+    if(tmp->succ!=NULL){
+        Nod*NOU=init(info);
+        NOU->succ=tmp->succ;
+        tmp->succ=NOU;
     }
     return front;
 }
 
-Nod* stergereInceput(Nod* front) {
-    if (front == NULL) cout << "Lista goala";
-    else {
-        Nod *tmp = front;
-        front = front->succ;
+Nod*stergereInceput(Nod*front){
+    if(front==NULL){
+        cout<<"Lista goala";
+    }else{
+        Nod*tmp=front;
+        front=front->succ;
         delete tmp;
     }
     return front;
 }
 
-Nod* stergereSfarsit(Nod* front) {
-    if (front == NULL) cout << "Nu exista";
-    else if (front->succ == NULL) {
+Nod*stergereSfarsit(Nod*front){
+    if(front==NULL){
+        cout<<"Nu exista";
+    }else if(front->succ==NULL){
         delete front;
-        front = NULL;
-    } else {
-        Nod *tmp = front;
-        while (tmp->succ->succ != NULL) tmp = tmp->succ;
+        front=NULL;
+    }else{
+        Nod*tmp=front;
+        while(tmp->succ->succ!=NULL)tmp=tmp->succ;
         delete tmp->succ;
-        tmp->succ = NULL;
+        tmp->succ=NULL;
     }
     return front;
 }
 
-Nod* stergereMijloc(Nod* front, const int element) {
-    if (front == NULL) { cout << "Lista goala"; return NULL; }
-    if (front->info == element) return stergereInceput(front);
-    Nod *tmp = front;
-    while (tmp->succ != NULL && tmp->succ->info != element) tmp = tmp->succ;
-    if (tmp->succ != NULL) {
-        Nod *salv = tmp->succ;
-        tmp->succ = tmp->succ->succ;
+Nod*stergereMijloc(Nod*front,const int element){
+    if(front==NULL){cout<<"Lista goala";return NULL;}
+    if(front->info==element)return stergereInceput(front);
+    Nod*tmp=front;
+    while(tmp->succ!=NULL&&tmp->succ->info!=element)tmp=tmp->succ;
+    if(tmp->succ!=NULL){
+        Nod*salv=tmp->succ;
+        tmp->succ=tmp->succ->succ;
         delete salv;
     }
     return front;
 }
 
-Nod* cautare(Nod* front, const int element) {
-    Nod *tmp = front;
-    while (tmp != NULL) {
-        if (tmp->info == element) return tmp;
-        tmp = tmp->succ;
+Nod*cautare(Nod*front,const int element){
+    Nod*tmp=front;
+    while(tmp!=NULL){
+        if(tmp->info==element)return tmp;
+        tmp=tmp->succ;
     }
     return NULL;
 }
 
-Nod* actualizare(Nod* front, const int element, int element_nou) {
-    Nod *tmp = cautare(front, element);
-    if (tmp != NULL) tmp->info = element_nou;
-    else if (front == NULL) cout << "Lista goala";
+Nod*actualizare(Nod*front,const int element,int element_nou){
+    Nod*tmp=cautare(front,element);
+    if(tmp!=NULL)tmp->info=element_nou;
+    else if(front==NULL)cout<<"Lista goala";
     return front;
 }
 
-Nod *par(Nod *front) {
-    Nod *NOU = NULL;
-    if (front == NULL) cout << "Lista goala";
-    else {
-        Nod *tmp = front;
-        while (tmp != NULL) {
-            if (tmp->info % 2 == 0) NOU = inserareInceput(NOU, tmp->info);
-            tmp = tmp->succ;
+Nod*par(Nod*front){
+    Nod*NOU=NULL;
+    if(front==NULL){
+        cout<<"Lista goala";
+    }else{
+        Nod*tmp=front;
+        while(tmp!=NULL){
+            if(tmp->info%2==0)NOU=inserareInceput(NOU,tmp->info);
+            tmp=tmp->succ;
         }
     }
     return NOU;
 }
 
-Nod *impar(Nod *front) {
-    Nod *NOU = NULL;
-    if (front == NULL) cout << "Lista goala";
-    else {
-        Nod *tmp = front;
-        while (tmp != NULL) {
-            if (tmp->info % 2 != 0) NOU = inserareInceput(NOU, tmp->info);
-            tmp = tmp->succ;
+Nod*impar(Nod*front){
+    Nod*NOU=NULL;
+    if(front==NULL){
+        cout<<"Lista goala";
+    }else{
+        Nod*tmp=front;
+        while(tmp!=NULL){
+            if(tmp->info%2!=0)NOU=inserareInceput(NOU,tmp->info);
+            tmp=tmp->succ;
         }
     }
     return NOU;
 }
 
-int minim(Nod* front) {
-    if (front == NULL) return 0;
-    Nod *tmp = front;
-    int min = front->info;
-    while (tmp != NULL) {
-        if (tmp->info < min) min = tmp->info;
-        tmp = tmp->succ;
+int minim(Nod*front){
+    if(front==NULL)return 0;
+    Nod*tmp=front;
+    int min=front->info;
+    while(tmp!=NULL){
+        if(tmp->info<min)min=tmp->info;
+        tmp=tmp->succ;
     }
     return min;
 }
 
-int maxim(Nod* front) {
-    if (front == NULL) return 0;
-    Nod *tmp = front;
-    int max = front->info;
-    while (tmp != NULL) {
-        if (tmp->info > max) max = tmp->info;
-        tmp = tmp->succ;
+int maxim(Nod*front){
+    if(front==NULL)return 0;
+    Nod*tmp=front;
+    int max=front->info;
+    while(tmp!=NULL){
+        if(tmp->info>max)max=tmp->info;
+        tmp=tmp->succ;
     }
     return max;
 }
 
-Nod* sortare(Nod* front) {
-    if (front == NULL || front->succ == NULL) return front;
-    for (Nod *i = front; i->succ != NULL; i = i->succ) {
-        for (Nod *j = i->succ; j != NULL; j = j->succ) {
-            if (i->info > j->info) {
-                int val = i->info;
-                i->info = j->info;
-                j->info = val;
+Nod*sortare(Nod*front){
+    if(front==NULL||front->succ==NULL)return front;
+    for(Nod*i=front;i->succ!=NULL;i=i->succ){
+        for(Nod*j=i->succ;j!=NULL;j=j->succ){
+            if(i->info>j->info){
+                int val=i->info;
+                i->info=j->info;
+                j->info=val;
             }
         }
     }
     return front;
 }
 
-void afisare(Nod* front) {
+void afisare(Nod*front){
     // If the first node is NULL, the list is obviously empty.
-    if (front == NULL) cout << "Lista este goala!." << endl;
-    // Otherwise we traverse the entire list, element by element, and display on the screen the information from that node. (in our case, an integer).
-    else {
+    if(front==NULL){
+        cout<<"Lista este goala!."<<endl;
+    }else{
         // We make a copy of the first NODE. We always make a copy of the first node and work with this copy. To not lose the first NODE!
-        Nod* temp = front;
+        Nod*temp=front;
         // As long as we don't reach the end of the list, we display the information and go to the next node.
-        while (temp != NULL) {
-            cout << temp->info << " ";
-            temp = temp->succ;
+        while(temp!=NULL){
+            cout<<temp->info<<" ";
+            temp=temp->succ;
         }
     }
-    cout << endl;
+    cout<<endl;
 }
-void distrugere(Nod*& front) {
+
+void distrugere(Nod*&front){
     // We destroy the entire list.
     // We traverse the list, make a copy of each node in turn. Delete this copy. Then move forward with the next NODE.
-    while (front != NULL) {
-        Nod* temp = front;
-        front = front->succ;
+    while(front!=NULL){
+        Nod*temp=front;
+        front=front->succ;
         // Delete releases the memory allocated with new (in short, we delete that node).
         delete temp;
     }
 }
-int main() {
-    Nod* front = NULL;
-    int n, m, meniu;
-    do {
-        cout << "0. Iesire din program\n1. Inserare Inceput\n2. Inserare Sfarsit\n3. Inserare Inainte\n4. Stergere inceput\n5. Stergere sfarsit\n6. Afisare\nAlegeti: ";
-        cin >> meniu;
-        switch (meniu) {
-            case 1: cout << "Valoare: "; cin >> n; front = inserareInceput(front, n); break;
-            case 2: cout << "Valoare: "; cin >> n; front = inserareSfarsit(front, n); break;
-            case 3: cout << "Valoare noua: "; cin >> n; cout << "Inainte de: "; cin >> m; front = inserareInainte(front, n, m); break;
-            case 4: front = stergereInceput(front); break;
-            case 5: front = stergereSfarsit(front); break;
-            case 6: afisare(front); break;
+
+int main(){
+    Nod*front=NULL;
+    int n,m,meniu;
+    do{
+        cout<<"0. Iesire\n1. Inserare Inceput\n2. Inserare Sfarsit\n3. Inserare Inainte\n4. Stergere inceput\n5. Stergere sfarsit\n6. Afisare\nAlegeti: ";
+        cin>>meniu;
+        switch(meniu){
+            case 1:cout<<"Valoare: ";cin>>n;front=inserareInceput(front,n);break;
+            case 2:cout<<"Valoare: ";cin>>n;front=inserareSfarsit(front,n);break;
+            case 3:cout<<"Valoare noua: ";cin>>n;cout<<"Inainte de: ";cin>>m;front=inserareInainte(front,n,m);break;
+            case 4:front=stergereInceput(front);break;
+            case 5:front=stergereSfarsit(front);break;
+            case 6:afisare(front);break;
         }
-        if(meniu != 0) {
-            cout << "Apasati Enter pentru a continua...";
-            cin.ignore(); cin.get();
+        if(meniu!=0){
+            cout<<"Apasati Enter...";
+            cin.ignore();cin.get();
             system("clear");
         }
-    } while (meniu != 0);
+    }while(meniu!=0);
     distrugere(front);
     return 0;
 }
