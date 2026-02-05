@@ -1,0 +1,74 @@
+// This program implements a Queue data structure using a dynamic array. It follows the First-In, First-Out (FIFO) principle. The Enqueue operation adds elements to the end of the array, while Dequeue removes the first element and shifts all subsequent elements to the left to maintain order.
+
+#include<iostream>
+using namespace std;
+int*initializare(int*v,int*top,int max){
+    if(v==NULL){
+        v=new int[max];
+        *top=0;
+        // Coada goala, a fost alocata | Empty queue, allocated
+    }else{
+        if(*top==max){
+            // Coada plina | Queue full
+            return v;
+        }else{
+            *top=0;
+        }
+    }
+    return v;
+}
+int Enqueue(int*v,int X,int*top,int max){
+    if(v==NULL){
+        return 0;
+    }else{
+        if(*top==max){
+            return 3;
+        }else{
+            v[*top]=X;
+            (*top)++;
+        }
+    }
+    return 1;
+}
+int Dequeue(int*v,int*top){
+    if(v==NULL){
+        return 0;
+    }else{
+        if((*top)==0){
+            return 2;
+        }else{
+            for(int i=0;i<(*top)-1;i++)
+                v[i]=v[i+1];
+            (*top)--;
+        }
+    }
+    return 1;
+}
+void afisare(int*v,int*top){
+    if(v==NULL){
+        cout<<"NULL"<<endl;
+    }else{
+        for(int i=0;i<(*top);i++){
+            cout<<v[i]<<" ";
+        }
+        cout<<endl;
+    }
+}
+int main(){
+    /* Variables:
+    v = array.
+    max = maximum elements.
+    top = current number of elements.
+    X = new element.
+    */
+    int max=10,top=0,n;
+    int*v=NULL;
+    v=initializare(v,&top,max);
+    Enqueue(v,10,&top,max);
+    Enqueue(v,20,&top,max);
+    afisare(v,&top);
+    Dequeue(v,&top);
+    afisare(v,&top);
+    delete[]v;
+    return 0;
+}
