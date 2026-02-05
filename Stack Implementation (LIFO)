@@ -1,0 +1,97 @@
+// This program implements a Stack data structure using a singly linked list. A stack follows the Last-In, First-Out (LIFO) principle, where elements are added (PUSH) and removed (POP) from the same end, commonly referred to as the "top" or "front."
+
+#include <iostream>
+using namespace std;
+
+struct Nod {
+    int info;
+    struct Nod * succ;
+};
+
+Nod* init(const int info) {
+    // Dynamic Allocation for a new NODE.
+    Nod* nodNou = new Nod;
+    // Set information in the new NODE.
+    nodNou->info = info;
+    // Set the next node (NULL, at creation we don't have a next NODE) so we set it to NULL.
+    nodNou->succ = NULL;
+    // The function returns the new NODE.
+    return nodNou;
+}
+
+Nod* PUSH(Nod* front, const int info) {
+    if (front == NULL) {
+        front = init(info);
+    } else {
+        Nod* NodNou = init(info);
+        NodNou->succ = front;
+        front = NodNou;
+    }
+    return front;
+}
+
+Nod* POP(Nod* front) {
+    if (front == NULL) {
+        cout << "Lista goala";
+    } else {
+        Nod *tmp = front;
+        front = front->succ;
+        delete tmp;
+    }
+    return front;
+}
+
+Nod* actualizare(Nod* front, const int element, int element_nou) {
+    if (front == NULL) {
+        cout << "Lista goala";
+    } else {
+        Nod *tmp = front;
+        while (tmp != NULL && tmp->info != element) {
+            tmp = tmp->succ;
+        }
+        if (tmp != NULL) {
+            tmp->info = element_nou;
+        }
+    }
+    return front;
+}
+
+void afisare(Nod* front) {
+    // If the first node is NULL, the list is obviously empty.
+    if (front == NULL) {
+        cout << "Lista este goala!." << endl;
+    }
+    // Otherwise we traverse the entire list, element by element, and display on the screen the information from that node. (in our case, an integer).
+    else {
+        // We make a copy of the first NODE. We always make a copy of the first node and work with this copy. To not lose the first NODE!
+        Nod* temp = front;
+        // As long as we don't reach the end of the list, we display the information and go to the next node.
+        while (temp != NULL) {
+            cout << temp->info << " ";
+            temp = temp->succ;
+        }
+    }
+    cout << endl;
+}
+
+void distrugere(Nod*& front) {
+    // We destroy the entire list.
+    // We traverse the list, make a copy of each node in turn. Delete this copy. Then move forward with the next NODE.
+    while (front != NULL) {
+        Nod* temp = front;
+        front = front->succ;
+        // Delete releases the memory allocated with new (in short, we delete that node).
+        delete temp;
+    }
+}
+
+int main() {
+    Nod* front = NULL;
+    front = PUSH(front, 10);
+    front = PUSH(front, 20);
+    afisare(front);
+    front = POP(front);
+    afisare(front);
+    distrugere(front);
+    return 0;
+}
