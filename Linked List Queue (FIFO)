@@ -1,0 +1,101 @@
+// This program implements a Queue data structure using a singly linked list. A queue follows the First-In, First-Out (FIFO) principle. In this specific implementation, new elements are added to the beginning (Enqueue), and elements are removed from the end (Dequeue), ensuring that the first element inserted is the first one to be removed.
+
+#include<iostream>
+using namespace std;
+struct Nod{
+    int info;
+    struct Nod*succ;
+};
+Nod*init(const int info){
+    Nod*nodNou=new Nod;
+    nodNou->info=info;
+    nodNou->succ=NULL;
+    return nodNou;
+}
+Nod*Enqueue(Nod*front,const int info){
+    if(front==NULL){
+        front=init(info);
+    }else{
+        Nod*NodNou=init(info);
+        NodNou->succ=front;
+        front=NodNou;
+    }
+    return front;
+}
+Nod*Dequeue(Nod*front){
+    if(front==NULL){
+        cout<<"Nu exista";
+    }else{
+        if(front->succ==NULL){
+            delete front;
+            front=NULL;
+        }else{
+            Nod*tmp=front;
+            while(tmp->succ->succ!=NULL)
+                tmp=tmp->succ;
+            Nod*salv=tmp->succ;
+            tmp->succ=NULL;
+            delete salv;
+        }
+    }
+    return front;
+}
+Nod*actualizare(Nod*front,const int element,int element_nou){
+    if(front==NULL){
+        cout<<"Lista goala";
+    }else{
+        Nod*tmp=front;
+        while(tmp!=NULL&&tmp->info!=element)
+            tmp=tmp->succ;
+        if(tmp!=NULL)
+            tmp->info=element_nou;
+    }
+    return front;
+}
+void afisare(Nod*front){
+    if(front==NULL){
+        cout<<"Lista este goala!."<<endl;
+    }else{
+        Nod*temp=front;
+        while(temp!=NULL){
+            cout<<temp->info<<" ";
+            temp=temp->succ;
+        }
+    }
+    cout<<endl;
+}
+void distrugere(Nod*&front){
+    // We destroy the entire list.
+    // We traverse the list, make a copy of each node in turn. Delete this copy. Then move forward with the next NODE.
+    while(front!=NULL){
+        Nod*temp=front;
+        front=front->succ;
+        // Delete releases the memory allocated with new (in short, we delete that node).
+        delete temp;
+    }
+}
+int main(){
+    Nod*front=NULL;
+    int n,meniu;
+    do{
+        cout<<"0. Iesire\n1. Enqueue\n2. Dequeue\n3. Afisare\nAlegeti: ";
+        cin>>meniu;
+        switch(meniu){
+            case 0:break;
+            case 1:
+                cout<<"Valoare: ";cin>>n;
+                front=Enqueue(front,n);
+                break;
+            case 2:
+                front=Dequeue(front);
+                break;
+            case 3:
+                afisare(front);
+                break;
+            default:
+                cout<<"Gresit";
+        }
+    }while(meniu!=0);
+    distrugere(front);
+    return 0;
+}
